@@ -7,6 +7,9 @@ import Signup from "./pages/Signup"
 import MainLayout from "../Layout/MainLayout"
 import LandingPage from "./pages/LandingPage"
 import Dashboard from "./pages/Dashboard"
+import ItemListingPage from "./pages/ItemListingPage.jsx"
+import ItemDetailPage from "./pages/ItemDetailsPage.jsx"
+import AdminDashboard from "./pages/AdminDashboard.jsx"
 
 
 const App = () => {
@@ -36,7 +39,15 @@ const App = () => {
           path="/add-item"
           element={
             <MainLayout>
-              <Home />
+              <ItemListingPage />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/item/:id"
+          element={
+            <MainLayout>
+              <ItemDetailPage />
             </MainLayout>
           }
         />
@@ -45,6 +56,14 @@ const App = () => {
           element={
             <MainLayout>
               <Dashboard />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/admin-dashboard"
+          element={
+            <MainLayout>
+              <AdminDashboard />
             </MainLayout>
           }
         />
