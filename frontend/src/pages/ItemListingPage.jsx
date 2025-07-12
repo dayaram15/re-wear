@@ -20,6 +20,9 @@ const ItemListingPage = () => {
     description: "",
     size: "",
     category: "",
+    tags: "",
+    condition: "Good",
+    type: "General",
   });
 
   const [mainImage, setMainImage] = useState(null);
@@ -60,25 +63,32 @@ const ItemListingPage = () => {
     data.append("description", formData.description);
     data.append("size", formData.size);
     data.append("category", formData.category);
+    data.append("tags", formData.tags);
+    data.append("condition", formData.condition);
+    data.append("type", formData.type);
     data.append("mainImage", mainImage);
     additionalImages.forEach((file) => data.append("additionalImages", file));
     data.append("uploader", user.username);
 
     setLoading(true);
     try {
-      const res = await axiosInstance.post(
-        "/items/upload",
-        data,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-          withCredentials: true,
-        }
-      );
+      const res = await axiosInstance.post("/items/upload", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true,
+      });
 
       toast.success(res.data.message || "Item listed successfully");
       if (res.data.item) addItem(res.data.item);
 
-      setFormData({ name: "", description: "", size: "", category: "" });
+      setFormData({
+        name: "",
+        description: "",
+        size: "",
+        category: "",
+        tags: "",
+        condition: "Good",
+        type: "General",
+      });
       setMainImage(null);
       setAdditionalImages([]);
       setPreview(null);
@@ -201,6 +211,49 @@ const ItemListingPage = () => {
                 onChange={handleChange}
                 placeholder="e.g., Jacket, Shirt"
               />
+            </div>
+          </div>
+
+          <div>
+            <Label>Tags</Label>
+            <Input
+              type="text"
+              name="tags"
+              value={formData.tags}
+              onChange={handleChange}
+              placeholder="e.g., casual, denim, eco-friendly"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>Condition</Label>
+              <select
+                name="condition"
+                value={formData.condition}
+                onChange={handleChange}
+                className="w-full px-3 py-2 rounded-md border bg-background text-text"
+              >
+                <option value="New">New</option>
+                <option value="Like New">Like New</option>
+                <option value="Good">Good</option>
+                <option value="Fair">Fair</option>
+              </select>
+            </div>
+
+            <div>
+              <Label>Type</Label>
+              <select
+                name="type"
+                value={formData.type}
+                onChange={handleChange}
+                className="w-full px-3 py-2 rounded-md border bg-background text-text"
+              >
+                <option value="General">General</option>
+                <option value="Ethnic">Ethnic</option>
+                <option value="Formal">Formal</option>
+                <option value="Party Wear">Party Wear</option>
+              </select>
             </div>
           </div>
 
