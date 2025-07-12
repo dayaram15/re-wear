@@ -38,7 +38,7 @@ class Item(db.Model):
         uploader_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
         created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-        images = db.relationship('ItemImage', backref='item', lazy=True)
+        images = db.relationship('ItemImage', backref='item', lazy=True, cascade='all, delete-orphan')
 
 
 class ItemImage(db.Model):
@@ -54,8 +54,8 @@ class Swap(db.Model):
 
         id = db.Column(db.Integer, primary_key=True)
         requester_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-        requested_item_id = db.Column(db.Integer, db.ForeignKey('items.id'), nullable=False)
-        offered_item_id = db.Column(db.Integer, db.ForeignKey('items.id'), nullable=False)
+        requested_item_id = db.Column(db.Integer, db.ForeignKey('items.id', ondelete='CASCADE'), nullable=False)
+        offered_item_id = db.Column(db.Integer, db.ForeignKey('items.id', ondelete='CASCADE'), nullable=False)
         swap_type = db.Column(db.String(50), nullable=False) #direct or points
         status = db.Column(db.String(50), default='pending')    #panding, accepted, rejected , cancelled
         created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -67,7 +67,7 @@ class Redemption(db.Model):
 
         id = db.Column(db.Integer, primary_key=True)
         user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-        item_id = db.Column(db.Integer, db.ForeignKey('items.id'), nullable=False)
+        item_id = db.Column(db.Integer, db.ForeignKey('items.id', ondelete='CASCADE'), nullable=False)
         points_used = db.Column(db.Integer, nullable=False)
         status = db.Column(db.String(50), default='pending')
         created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -78,7 +78,7 @@ class AdminAction(db.Model):
 
         id = db.Column(db.Integer, primary_key=True)
         admin_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-        item_id = db.Column(db.Integer, db.ForeignKey('items.id'), nullable=False)  
+        item_id = db.Column(db.Integer, db.ForeignKey('items.id', ondelete='CASCADE'), nullable=False)  
         action = db.Column(db.String(50), nullable=False)
         reason = db.Column(db.String(255), nullable=True)
         created_at = db.Column(db.DateTime, default=datetime.utcnow)

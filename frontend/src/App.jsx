@@ -1,6 +1,6 @@
-import { Route, Routes, useNavigate } from "react-router-dom"
+import { Route, Routes } from "react-router-dom"
+import { useEffect } from "react"
 import Navbar from "./components/Navbar2"
-import { Button } from "./components/ui/button"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Signup from "./pages/Signup"
@@ -10,13 +10,20 @@ import Dashboard from "./pages/Dashboard"
 import ItemListingPage from "./pages/ItemListingPage.jsx"
 import ItemDetailPage from "./pages/ItemDetailsPage.jsx"
 import AdminDashboard from "./pages/AdminDashboard.jsx"
+import useAuthStore from "./store/authStore"
 
 
 const App = () => {
- 
+  const { checkAuth } = useAuthStore();
+
+  useEffect(() => {
+    // Check authentication status when app loads
+    checkAuth();
+  }, [checkAuth]);
+
   return (
    <div>
-    {/* <Navbar/> */}
+    <Navbar/>
     <Routes>
         {/* Layout wrapped pages */}
         <Route

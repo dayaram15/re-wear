@@ -12,7 +12,12 @@ def create_app():
     app.config.from_object(Config)
     jwt.init_app(app)
     db.init_app(app)
-    CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
+    CORS(app, 
+         supports_credentials=True, 
+         origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+         allow_headers=["Content-Type", "Authorization"],
+         methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+         credentials=True)
 
 
     cloudinary.config(
@@ -28,9 +33,13 @@ def create_app():
         db.create_all()
 
     from app.routes.items import item_bp
+    from app.routes.swap import swap_bp
+    from app.routes.admin import admin_bp
     from app.auth import auth_bp
     app.register_blueprint(auth_bp)
     app.register_blueprint(item_bp)
+    app.register_blueprint(swap_bp)
+    app.register_blueprint(admin_bp)
 
 
     return app

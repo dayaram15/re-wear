@@ -4,16 +4,47 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { X } from "lucide-react";
-import { useState } from "react";
-import axios from "axios";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import useAuthStore from "@/store/authStore";
 import useItemStore from "@/store/itemStore";
 import axiosInstance from "../lib/axios";
 
 const ItemListingPage = () => {
-  const { user } = useAuthStore();
+  const { user, checkAuth } = useAuthStore();
   const { addItem } = useItemStore();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check authentication when component mounts
+    const verifyAuth = async () => {
+      setAuthLoading(true);
+      try {
+        console.log('Current user state:', user);
+        const isAuthenticated = await checkAuth();
+        console.log('Authentication result:', isAuthenticated);
+        if (!isAuthenticated) {
+          console.log('User not authenticated, redirecting to login');
+          toast.error("Please login to list an item");
+          navigate("/login");
+        }
+      } catch (error) {
+        console.error("Auth check failed:", error);
+        toast.error("Authentication failed");
+        navigate("/login");
+      } finally {
+        setAuthLoading(false);
+      }
+    };
+    
+    // Only run auth check if user is not already authenticated
+    if (!user) {
+      verifyAuth();
+    } else {
+      setAuthLoading(false);
+    }
+  }, []); // Empty dependency array - only run once on mount
 
   const [formData, setFormData] = useState({
     name: "",
@@ -29,6 +60,7 @@ const ItemListingPage = () => {
   const [additionalImages, setAdditionalImages] = useState([]);
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -53,9 +85,40 @@ const ItemListingPage = () => {
     setAdditionalImages((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const testAuth = async () => {
+    try {
+      console.log('Testing authentication...');
+      console.log('Current user from store:', user);
+      console.log('Local storage auth data:', localStorage.getItem('auth-storage'));
+      
+      const response = await axiosInstance.get('/auth/test');
+      console.log('Auth test successful:', response.data);
+      toast.success('Authentication working!');
+    } catch (error) {
+      console.error('Auth test failed:', error);
+      toast.error('Authentication failed: ' + (error.response?.data?.message || error.message));
+    }
+  };
+
+  const debugCookies = async () => {
+    try {
+      console.log('Debugging cookies...');
+      const response = await axiosInstance.get('/auth/debug-cookies');
+      console.log('Cookie debug response:', response.data);
+      toast.success('Check console for cookie debug info');
+    } catch (error) {
+      console.error('Cookie debug failed:', error);
+      toast.error('Cookie debug failed: ' + error.message);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!user?.username) return toast.error("User must be logged in");
+    if (!user?.username) {
+      toast.error("Please login to list an item");
+      navigate("/login");
+      return;
+    }
     if (!mainImage) return toast.error("Main image is required");
 
     const data = new FormData();
@@ -100,11 +163,45 @@ const ItemListingPage = () => {
     }
   };
 
+  if (authLoading) {
+    return (
+      <div className="max-w-6xl mx-auto p-6">
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Checking authentication...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="max-w-6xl mx-auto p-6">
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">Please login to list an item.</p>
+          <Button onClick={() => navigate("/login")} className="mt-4">
+            Go to Login
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-6xl mx-auto p-6">
-      <h2 className="text-2xl font-bold text-center mb-6 text-primary">
-        List a New Clothing Item
-      </h2>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-primary">
+          List a New Clothing Item
+        </h2>
+        <div className="flex gap-2">
+          <Button onClick={testAuth} variant="outline" size="sm">
+            Test Auth
+          </Button>
+          <Button onClick={debugCookies} variant="outline" size="sm">
+            Debug Cookies
+          </Button>
+        </div>
+      </div>
 
       <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-8">
         {/* Left Side: Images */}

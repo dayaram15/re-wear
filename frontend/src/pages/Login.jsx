@@ -35,7 +35,7 @@ const Login = () => {
       console.log(res)
 
       if (res.data.success) {
-        setAuthUser(res.data.user);
+        setAuthUser(res.data.user, res.data.token);
         navigate("/");
         toast.success(res.data.message);
         setInput({ email: "", password: "" });
