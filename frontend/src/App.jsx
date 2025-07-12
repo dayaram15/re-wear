@@ -8,6 +8,8 @@ import MainLayout from "../Layout/MainLayout"
 import LandingPage from "./pages/LandingPage"
 import Dashboard from "./pages/Dashboard"
 import ItemListingPage from "./pages/ItemListingPage.jsx"
+import ItemDetailPage from "./pages/ItemDetailsPage.jsx"
+import AdminDashboard from "./pages/AdminDashboard.jsx"
 
 
 const App = () => {
@@ -42,10 +44,26 @@ const App = () => {
           }
         />
         <Route
+          path="/item/:id"
+          element={
+            <MainLayout>
+              <ItemDetailPage />
+            </MainLayout>
+          }
+        />
+        <Route
           path="/dashboard"
           element={
             <MainLayout>
               <Dashboard />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/admin-dashboard"
+          element={
+            <MainLayout>
+              <AdminDashboard />
             </MainLayout>
           }
         />
