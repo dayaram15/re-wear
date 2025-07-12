@@ -9,3 +9,5 @@ class Config:
     SECRET_KEY = os.getenv('SECRET_KEY', 're-wear-secret-key')
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'super-secret-jwt-key') 
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=24) 
+    UPLOAD_FOLDER = 'app/static/uploads'
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
