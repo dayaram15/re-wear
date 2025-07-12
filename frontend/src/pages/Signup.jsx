@@ -33,12 +33,6 @@ const Signup = () => {
       const res = await axiosInstance.post(
         "auth/register",
         input,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
       );
 
       if (res.data.success) {

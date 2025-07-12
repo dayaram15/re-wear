@@ -14,3 +14,8 @@ class Config:
     CLOUDINARY_API_SECRET = os.getenv('k-5ER4n-l_sLVzX1iGmfpyuWf2I')
     UPLOAD_FOLDER = 'app/static/uploads'
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+    JWT_TOKEN_LOCATION = ["cookies"]
+    JWT_COOKIE_SECURE = False  # Set to True only in production (HTTPS)
+    JWT_COOKIE_SAMESITE = "Lax"  # or "None" if frontend and backend are on different domains
+    JWT_COOKIE_CSRF_PROTECT = False  # Set to True in production with CSRF tokens
+    JWT_ACCESS_COOKIE_NAME = "access_token_cookie"
