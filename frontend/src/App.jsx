@@ -7,6 +7,7 @@ import Signup from "./pages/Signup"
 import MainLayout from "../Layout/MainLayout"
 import LandingPage from "./pages/LandingPage"
 import Dashboard from "./pages/Dashboard"
+import ItemListingPage from "./pages/ItemListingPage.jsx"
 
 
 const App = () => {
@@ -36,7 +37,7 @@ const App = () => {
           path="/add-item"
           element={
             <MainLayout>
-              <Home />
+              <ItemListingPage />
             </MainLayout>
           }
         />
