@@ -12,7 +12,7 @@ def create_app():
     app.config.from_object(Config)
     jwt.init_app(app)
     db.init_app(app)
-    CORS(app)
+    CORS(app,supports_credentials=True)
 
     # Ensure models are imported before db.create_all()
     from app import models
