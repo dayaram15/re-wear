@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import useAuthStore from "@/store/authStore"; // Adjust path if different
+import axiosInstance from "../lib/axios";
 
 const Login = () => {
   const { user, setAuthUser } = useAuthStore();
@@ -27,8 +28,8 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post(
-        "http://localhost:4002/api/v1/user/login",
+      const res = await axiosInstance.post(
+        "/auth/login",
         input,
         {
           headers: {
@@ -37,6 +38,7 @@ const Login = () => {
           withCredentials: true,
         }
       );
+      console.log(res)
 
       if (res.data.success) {
         setAuthUser(res.data.user);

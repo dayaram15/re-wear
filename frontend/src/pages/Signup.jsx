@@ -7,12 +7,14 @@ import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import useAuthStore from "@/store/authStore";
+import axiosInstance from "../lib/axios";
 
 const Signup = () => {
   const { user, setAuthUser } = useAuthStore();
   const navigate = useNavigate();
 
   const [input, setInput] = useState({
+    name: "",       // 👈 Added name
     username: "",
     email: "",
     password: "",
@@ -28,8 +30,8 @@ const Signup = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post(
-        "http://localhost:4002/api/v1/user/register",
+      const res = await axiosInstance.post(
+        "auth/register",
         input,
         {
           headers: {
@@ -43,7 +45,7 @@ const Signup = () => {
         setAuthUser(res.data.user);
         toast.success(res.data.message);
         navigate("/");
-        setInput({ username: "", email: "", password: "" });
+        setInput({ name: "", username: "", email: "", password: "" }); // 👈 Reset all
       }
     } catch (error) {
       console.log(error);
@@ -70,6 +72,18 @@ const Signup = () => {
           <p className="text-sm text-center mt-2">
             Register to start exchanging your clothes
           </p>
+        </div>
+
+        {/* 👇 Name field added here */}
+        <div>
+          <Label>Name</Label>
+          <Input
+            type="text"
+            name="name"
+            value={input.name}
+            onChange={changeEventHandler}
+            className="focus-visible:ring-transparent my-2"
+          />
         </div>
 
         <div>

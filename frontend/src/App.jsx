@@ -6,6 +6,7 @@ import Login from "./pages/Login"
 import Signup from "./pages/Signup"
 import MainLayout from "../Layout/MainLayout"
 import LandingPage from "./pages/LandingPage"
+import Dashboard from "./pages/Dashboard"
 
 
 const App = () => {
@@ -43,7 +44,7 @@ const App = () => {
           path="/dashboard"
           element={
             <MainLayout>
-              <Home />
+              <Dashboard />
             </MainLayout>
           }
         />
