@@ -6,29 +6,30 @@ import axios from "axios";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
-import useAuthStore from "@/store/authStore"; // Adjust path if different
+import useAuthStore from "@/store/authStore";
 
-const Login = () => {
+const Signup = () => {
   const { user, setAuthUser } = useAuthStore();
+  const navigate = useNavigate();
 
   const [input, setInput] = useState({
+    username: "",
     email: "",
     password: "",
   });
 
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
 
-  const loginHandler = async (e) => {
+  const signupHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
       const res = await axios.post(
-        "http://localhost:4002/api/v1/user/login",
+        "http://localhost:4002/api/v1/user/register",
         input,
         {
           headers: {
@@ -40,13 +41,13 @@ const Login = () => {
 
       if (res.data.success) {
         setAuthUser(res.data.user);
-        navigate("/");
         toast.success(res.data.message);
-        setInput({ email: "", password: "" });
+        navigate("/");
+        setInput({ username: "", email: "", password: "" });
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.response?.data?.message || "Login failed");
+      toast.error(error.response?.data?.message || "Signup failed");
     } finally {
       setLoading(false);
     }
@@ -61,14 +62,25 @@ const Login = () => {
   return (
     <div className="flex items-center w-screen h-screen justify-center">
       <form
-        onSubmit={loginHandler}
+        onSubmit={signupHandler}
         className="shadow-lg flex flex-col gap-5 p-6"
       >
         <div className="my-2">
-          <h1 className="text-center font-bold text-xl ">Re-wear</h1>
+          <h1 className="text-center font-bold text-xl">Re-Wear</h1>
           <p className="text-sm text-center mt-2">
-            Login to start exchanging your clothes
+            Register to start exchanging your clothes
           </p>
+        </div>
+
+        <div>
+          <Label>Username</Label>
+          <Input
+            type="text"
+            name="username"
+            value={input.username}
+            onChange={changeEventHandler}
+            className="focus-visible:ring-transparent my-2"
+          />
         </div>
 
         <div>
@@ -96,16 +108,16 @@ const Login = () => {
         {loading ? (
           <Button disabled>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Please wait...
+            Creating account...
           </Button>
         ) : (
-          <Button type="submit">Login</Button>
+          <Button type="submit">Register</Button>
         )}
 
         <span className="text-center text-sm">
-          Don't have an account?
-          <Link className="text-blue-600 mx-1" to="/signup">
-            Signup
+          Already have an account?
+          <Link className="text-blue-600 mx-1" to="/login">
+            Login
           </Link>
         </span>
       </form>
@@ -113,4 +125,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;
