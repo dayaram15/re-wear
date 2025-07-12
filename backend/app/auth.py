@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify,make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import create_access_token, set_access_cookies
 from app.models import User
@@ -45,13 +45,16 @@ def login():
         return jsonify({"success": False, "message": "Invalid email or password"}), 401
 
     access_token = create_access_token(identity=str(user.id))
-    return jsonify({
+
+    # Set token in cookie
+    response = make_response(jsonify({
         "success": True,
-        "access_token": access_token,
         "user": {
             "id": user.id,
             "username": user.username,
             "name": user.name,
             "email": user.email
         }
-    }), 200
+    }))
+    set_access_cookies(response, access_token)
+    return response

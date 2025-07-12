@@ -12,7 +12,14 @@ def create_app():
     app.config.from_object(Config)
     jwt.init_app(app)
     db.init_app(app)
-    CORS(app,supports_credentials=True)
+    CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
+
+    @app.after_request
+    def log_cookie_headers(response):
+        print("[DEBUG] Set-Cookie Header:", response.headers.get('Set-Cookie'))
+        return response
+
+
 
     cloudinary.config(
         cloud_name=app.config['CLOUDINARY_CLOUD_NAME'],
