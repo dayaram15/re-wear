@@ -16,14 +16,13 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const logoutHandler = () => {
-    // Clear user state (you can also call API here)
-    setAuthUser(null);
+    setAuthUser(null); // You can also call a logout API here
   };
 
   return (
-    <header className="w-full px-6 py-4 shadow-sm bg-white border-b fixed top-0 left-0 z-50">
+    <header className="w-full px-6 py-4 shadow-sm bg-bg border-b border-border fixed top-0 left-0 z-50">
       <div className="max-w-6xl mx-auto flex items-center justify-between">
-        <Link to="/" className="text-xl font-bold text-blue-600">
+        <Link to="/" className="text-xl font-bold text-primary">
           ReWear
         </Link>
 
@@ -32,7 +31,7 @@ const Navbar = () => {
             <Link
               key={link.name}
               to={link.path}
-              className="text-sm font-medium hover:text-blue-600 transition-colors"
+              className="text-sm font-medium text-text hover:text-hover transition-colors"
             >
               {link.name}
             </Link>
@@ -40,7 +39,9 @@ const Navbar = () => {
 
           {user ? (
             <>
-              <span className="text-sm font-semibold">{user.username}</span>
+              <span className="text-sm font-semibold text-text">
+                {user.username}
+              </span>
               <Button variant="outline" size="sm" onClick={logoutHandler}>
                 Logout
               </Button>
@@ -73,12 +74,12 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden mt-4 flex flex-col gap-4 bg-white border-t px-4 py-2">
+        <div className="md:hidden mt-4 flex flex-col gap-4 bg-bg border-t border-border px-4 py-2">
           {navLinks.map((link) => (
             <Link
               key={link.name}
               to={link.path}
-              className="text-sm font-medium hover:text-blue-600 transition-colors"
+              className="text-sm font-medium text-text hover:text-hover transition-colors"
               onClick={() => setMenuOpen(false)}
             >
               {link.name}
@@ -87,7 +88,9 @@ const Navbar = () => {
 
           {user ? (
             <>
-              <span className="text-sm font-semibold">{user.username}</span>
+              <span className="text-sm font-semibold text-text">
+                {user.username}
+              </span>
               <Button
                 variant="outline"
                 size="sm"
